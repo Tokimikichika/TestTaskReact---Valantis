@@ -2,9 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import md5 from 'md5';
 import './App.css';
 
-const App = () => {
+const App = ({authToken}) => {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(50);
   const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '');
@@ -31,7 +30,7 @@ const App = () => {
     } catch (error) {
       console.error('Ошибка при получении списка товаров:', error);
     }
-  }, []);
+  }, [authToken]);
 
   const fetchProductDetails = useCallback(async (ids) => {
     try {
@@ -66,11 +65,11 @@ const App = () => {
       });
   
       setProducts(uniqueProducts);
-      setFilteredProducts(uniqueProducts);
+      filterProducts(uniqueProducts);
     } catch (error) {
       console.error('Ошибка при получении деталей товаров:', error);
     }
-  }, []);
+  }, [authToken]);
 
   const handlePageChange = useCallback(async (newPage) => {
     const offset = (newPage - 1) * itemsPerPage;
@@ -100,7 +99,7 @@ const App = () => {
     } catch (error) {
       console.error('Ошибка при фильтрации товаров:', error);
     }
-  }, []);
+  }, [authToken]);
   const delayedFilterProducts = useCallback((filters) => {
     setTimeout(() => {
       filterProducts(filters);
