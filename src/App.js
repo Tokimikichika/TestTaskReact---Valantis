@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import md5 from 'md5';
 import './App.css';
 
-const App = ({authToken}) => {
+const App = () => {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [itemsPerPage] = useState(50);
   const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '');
   const authToken = md5(`Valantis_${timestamp}`);
@@ -65,7 +66,7 @@ const App = ({authToken}) => {
       });
   
       setProducts(uniqueProducts);
-      filterProducts(uniqueProducts);
+      setFilteredProducts(uniqueProducts);
     } catch (error) {
       console.error('Ошибка при получении деталей товаров:', error);
     }
@@ -124,7 +125,7 @@ const App = ({authToken}) => {
       <input className='inputField' type="number" placeholder="Фильтр по цене" onChange={(e) => delayedFilterProducts({ price: parseFloat(e.target.value) })} />
       <input className='inputField' type="text" placeholder="Фильтр по бренду" onChange={(e) => delayedFilterProducts({ brand: e.target.value })} />
       <div className="productList">
-        {products.map((product, index) => (
+        {filteredProducts.map((product, index) => (
           <div key={index} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
             <h3>{product.name}</h3>
             <p>ID: {product.id}</p>
