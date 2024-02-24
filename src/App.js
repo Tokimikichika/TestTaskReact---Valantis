@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import md5 from 'md5';
 import './App.css';
 
@@ -10,7 +10,7 @@ const App = () => {
   const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '');
   const authToken = md5(`Valantis_${timestamp}`);
 
-  const fetchProducts = async (offset, limit) => {
+  const fetchProducts = useCallback(async (offset, limit) => {
     try {
       const response = await fetch('http://api.valantis.store:40000/', {
         headers: {
@@ -31,9 +31,9 @@ const App = () => {
     } catch (error) {
       console.error('Ошибка при получении списка товаров:', error);
     }
-  };
+  }, []);
 
-  const fetchProductDetails = async (ids) => {
+  const fetchProductDetails = useCallback(async (ids) => {
     try {
       const response = await fetch('http://api.valantis.store:40000/', {
         headers: {
@@ -70,16 +70,16 @@ const App = () => {
     } catch (error) {
       console.error('Ошибка при получении деталей товаров:', error);
     }
-  };
+  }, []);
 
-  const handlePageChange = async (newPage) => {
+  const handlePageChange = useCallback(async (newPage) => {
     const offset = (newPage - 1) * itemsPerPage;
     const ids = await fetchProducts(offset, itemsPerPage);
     fetchProductDetails(ids);
     setPage(newPage);
-  };
+  }, [fetchProducts, fetchProductDetails, itemsPerPage]);
 
-  const filterProducts = async (filters) => {
+  const filterProducts = useCallback(async (filters) => {
     try {
       const response = await fetch('http://api.valantis.store:40000/', {
         headers: {
@@ -100,25 +100,14 @@ const App = () => {
     } catch (error) {
       console.error('Ошибка при фильтрации товаров:', error);
     }
-  };
-  const delayedFilterProducts = (filters) => {
+  }, []);
+  const delayedFilterProducts = useCallback((filters) => {
     setTimeout(() => {
       filterProducts(filters);
     }, 500);
-  };
+  }, [filterProducts]);
 
-  const renderProducts = () => {
-    return filteredProducts.map((product) => (
-      <div key={product.id}>
-        <p>ID: {product.id}</p>
-        <p>Название: {product.product}</p>
-        <p>Цена: {product.price}</p>
-        <p>Бренд: {product.brand}</p>
-      </div>
-    ));
-  };
-
-  
+   
   useEffect(() => {
     setFilteredProducts(products); // Сброс отфильтрованных товаров перед обновлением
     handlePageChange(page); // Вызов обновления списка товаров при изменении страницы
