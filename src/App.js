@@ -12,7 +12,7 @@ const App = () => {
 
   const fetchProducts = useCallback(async (offset, limit) => {
     try {
-      const response = await fetch('http://api.valantis.store:40000/', {
+      const response = await fetch('https://api.valantis.store:41000/', {
         headers: {
           'X-Auth': `${authToken}`,
           "Content-Type": "application/json",
