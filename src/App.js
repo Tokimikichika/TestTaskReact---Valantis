@@ -35,7 +35,7 @@ const App = () => {
 
   const fetchProductDetails = useCallback(async (ids) => {
     try {
-      const response = await fetch('http://api.valantis.store:40000/', {
+      const response = await fetch('https://api.valantis.store:41000/', {
         headers: {
           'X-Auth': `${authToken}`,
           "Content-Type": "application/json",
@@ -81,7 +81,7 @@ const App = () => {
 
   const filterProducts = useCallback(async (filters) => {
     try {
-      const response = await fetch('http://api.valantis.store:40000/', {
+      const response = await fetch('https://api.valantis.store:41000/', {
         headers: {
           'Content-Type': 'application/json',
           'X-Auth': `${authToken}`
